@@ -31,7 +31,7 @@ class Application extends CI_Controller {
      * Render this page
      */
     function render() {
-        $this->data['menubar'] = $this->parser->parse('_menubar', $this->config->item('menu_choices'),true);
+        $this->data['menubar'] = $this->makemenu();
         $this->data['content'] = $this->parser->parse($this->data['pagebody'], $this->data, true);
 
         // finally, build the browser page!
@@ -58,6 +58,36 @@ class Application extends CI_Controller {
                 return;
             }
         }
+    }
+    
+    function makemenu()
+    {
+        $choices = array();
+        $menudata = array();
+        
+        $userRole = $this->session->userdata('userRole');
+        $userName = $this->session->userdata('userName');
+        
+        if( $userName == NULL )
+            $choices['username'] = "Guest";
+        else
+            $choices['username'] = $userName;
+        
+        $choices['menudata'] = array();
+        array_push( $choices['menudata'], array('name' => "Alpha", 'link' => '/alpha' ));
+        
+        if( in_array( $userRole, array( ROLE_USER, ROLE_ADMIN )))
+            array_push( $choices['menudata'], array('name' => "Beta", 'link' => '/beta' ));
+        
+        if( $userRole == ROLE_ADMIN )
+            array_push( $choices['menudata'], array('name' => "Gamma", 'link' => '/gamma' ));
+                
+        if( in_array( $userRole, array( ROLE_USER, ROLE_ADMIN )))
+            array_push( $choices['menudata'], array('name' => "Logout", 'link' => '/auth/logout' ));
+        else
+            array_push( $choices['menudata'], array('name' => "Login", 'link' => '/auth' ));
+        
+        return $this->parser->parse('_menubar', $choices, true);
     }
 }
 
