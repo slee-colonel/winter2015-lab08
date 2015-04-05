@@ -1,5 +1,8 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+define('ROLE_USER','user');
+define('ROLE_ADMIN','admin');
+
 // location of data folders
 define('DATAPATH', './data/');
 define('XMLSUFFIX','.xml');

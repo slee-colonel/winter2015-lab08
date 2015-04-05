@@ -38,7 +38,27 @@ class Application extends CI_Controller {
         $this->data['data'] = &$this->data;
         $this->parser->parse('_template', $this->data);
     }
-
+    
+    function restrict($roleNeeded = null) 
+    {
+        $userRole = $this->session->userdata('userRole');
+        if ($roleNeeded != null) 
+        {
+            if (is_array($roleNeeded)) 
+            {
+                if (!in_array($userRole, $roleNeeded)) 
+                {
+                    redirect("/");
+                    return;
+                }
+            } 
+            else if ($userRole != $roleNeeded) 
+            {
+                redirect("/");
+                return;
+            }
+        }
+    }
 }
 
 /* End of file MY_Controller.php */
